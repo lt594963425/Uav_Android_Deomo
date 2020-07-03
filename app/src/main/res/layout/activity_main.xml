@@ -21,6 +21,16 @@
             android:paddingTop="40dp" />
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="50dp"
+            android:gravity="center"
+            android:text="无  人  机  测  绘"
+            android:textColor="@color/white"
+            android:textSize="26sp" />
+
+        <TextView
             android:id="@+id/uav_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

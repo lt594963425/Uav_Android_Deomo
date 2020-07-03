@@ -129,10 +129,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void run() {
                 if (baseProduct != null && uavStatus != null) {
                     uavStatus.setText(baseProduct.getModel().getDisplayName());
-                    uavStatus.setTextColor(Color.argb(100, 36, 203, 203));
+                    uavStatus.setTextColor(Color.argb(100, 14, 247, 6));
                 } else {
                     uavStatus.setText("设备未连接");
-                    uavStatus.setTextColor(Color.argb(100, 250, 110, 110));
+                    uavStatus.setTextColor(Color.argb(100, 251, 77, 77));
                 }
             }
         });
