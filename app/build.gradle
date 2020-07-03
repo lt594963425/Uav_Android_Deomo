@@ -1,0 +1,115 @@
+apply plugin: 'com.android.application'
+
+repositories {
+    mavenLocal()
+}
+
+android {
+    signingConfigs {
+        release {
+            storeFile file("./keystore/airline.jks")
+            storePassword "al123456"
+            keyAlias "airline"
+            keyPassword "al123456"
+        }
+        debug {
+            storeFile file("./keystore/airline.jks")
+            storePassword "al123456"
+            keyAlias "airline"
+            keyPassword "al123456"
+        }
+    }
+    compileSdkVersion 29
+    buildToolsVersion '29.0.1'
+    defaultConfig {
+        applicationId "com.dji.ux.sample"
+        minSdkVersion 19
+        targetSdkVersion 29
+        multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
+        ndk {
+            // On x86 devices that run Android API 23 or above, if the application is targeted with API 23 or
+            // above, FFmpeg lib might lead to runtime crashes or warnings.
+            abiFilters 'armeabi-v7a'
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+
+    }
+    dexOptions {
+        javaMaxHeapSize "3g"
+    }
+    lintOptions {
+        abortOnError false
+    }
+    packagingOptions {
+        doNotStrip "*/*/libdjivideo.so"
+        doNotStrip "*/*/libSDKRelativeJNI.so"
+        doNotStrip "*/*/libFlyForbid.so"
+        doNotStrip "*/*/libduml_vision_bokeh.so"
+        doNotStrip "*/*/libyuv2.so"
+        doNotStrip "*/*/libGroudStation.so"
+        doNotStrip "*/*/libFRCorkscrew.so"
+        doNotStrip "*/*/libUpgradeVerify.so"
+        doNotStrip "*/*/libFR.so"
+        doNotStrip "*/*/libDJIFlySafeCore.so"
+        doNotStrip "*/*/libdjifs_jni.so"
+        doNotStrip "*/*/libsfjni.so"
+        doNotStrip "*/*/libDJICommonJNI.so"
+        doNotStrip "*/*/libDJICSDKCommon.so"
+        doNotStrip "*/*/libDJIUpgradeCore.so"
+        doNotStrip "*/*/libDJIUpgradeJNI.so"
+        doNotStrip "*/*/libDJIWaypointV2Core.so"
+        doNotStrip "*/*/libDJIMOP.so"
+
+        pickFirst 'lib/*/libstlport_shared.so'
+        pickFirst 'lib/*/libRoadLineRebuildAPI.so'
+        pickFirst 'lib/*/libGNaviUtils.so'
+        pickFirst 'lib/*/libGNaviMapex.so'
+        pickFirst 'lib/*/libGNaviData.so'
+        pickFirst 'lib/*/libGNaviMap.so'
+        pickFirst 'lib/*/libGNaviSearch.so'
+        pickFirst 'lib/*/libDJIFlySafeCore.so'
+        pickFirst 'lib/*/libdjifs_jni.so'
+        pickFirst 'lib/*/libsfjni.so'
+        exclude 'META-INF/proguard/okhttp3.pro'
+        exclude 'META-INF/rxjava.properties'
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    //Internal maven 4.11 exist error. please use 4.11.0.1 in internal maven.
+    implementation('com.dji:dji-uxsdk:4.12')
+    compileOnly('com.dji:dji-sdk-provided:4.12')
+
+    // AMAP: Do not include if publishing to Google Play Store
+    implementation 'com.amap.api:3dmap:6.9.2'
+    implementation 'com.amap.api:search:6.9.2'
+    implementation 'com.amap.api:location:4.7.0'
+
+    implementation 'org.greenrobot:eventbus:3.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.annotation:annotation:1.0.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0-rc01'
+    implementation 'androidx.core:core:1.0.0'
+
+    //HERE maps
+    implementation files('libs/HERE-sdk-3.15.0.aar')
+
+}

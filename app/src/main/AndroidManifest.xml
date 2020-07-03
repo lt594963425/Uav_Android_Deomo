@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.dji.ux.sample">
+
+    <!-- DJI SDK need these permissions -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <uses-feature
+        android:name="android.hardware.usb.host"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.usb.accessory"
+        android:required="true" />
+
+    <application
+        android:name=".MApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning"
+        tools:replace="android:label, android:theme">
+
+        <!-- DJI SDK -->
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+
+        <meta-data
+            android:name="android.webkit.WebView.EnableSafeBrowsing"
+            android:value="true" />
+        <meta-data
+            android:name="com.dji.sdk.API_KEY"
+            android:value="6a677abc4dd9c0a0d1948a98" />
+
+        <activity
+            android:name="dji.sdk.sdkmanager.DJIAoaControllerActivity"
+            android:theme="@android:style/Theme.Translucent">
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED" />
+            </intent-filter>
+            <!-- <meta-data -->
+            <!-- android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED" -->
+            <!-- android:resource="@xml/accessory_filter" /> -->
+
+        </activity>
+        <service
+            android:name="com.here.android.mpa.service.MapService"
+            android:label="HereMapService">
+            <intent-filter>
+                <!--Note, action name should not be changed.-->
+                <action android:name="com.here.android.mpa.service.MapService.v3" />
+            </intent-filter>
+        </service>
+        <!-- DJI SDK -->
+        <uses-library android:name="com.android.future.usb.accessory" />
+        <!-- AMaps -->
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="1f3fbc117e66877993ea2c7bb91a4214" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.dji.ux.sample.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
+        <service android:name="dji.sdk.sdkmanager.DJIGlobalService" />
+
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="sensorLandscape">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED"
+                android:resource="@xml/accessory_filter" />
+        </activity>
+
+        <activity
+            android:name=".CompleteWidgetActivity"
+            android:label="Default Widgets"
+            android:launchMode="singleTop"
+            android:screenOrientation="sensorLandscape" />
+        <activity
+            android:name=".CustomizedWidgetsActivity"
+            android:label="Customized Widgets"
+            android:launchMode="singleTop"
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".MapWidgetActivity"
+            android:label="Map Widget"
+            android:launchMode="singleTop"
+            android:screenOrientation="sensorLandscape" />
+
+    </application>
+
+</manifest>
