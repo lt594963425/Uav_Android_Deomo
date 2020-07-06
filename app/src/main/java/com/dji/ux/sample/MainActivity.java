@@ -56,7 +56,7 @@ import dji.sdk.useraccount.UserAccountManager;
 /**
  * Main activity that displays three choices to user
  */
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "MainActivity";
     private static final String LAST_USED_BRIDGE_IP = "bridgeip";
     private AtomicBoolean isRegistrationInProgress = new AtomicBoolean(false);
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (baseProduct != null && uavStatus != null) {
+                if (baseProduct != null && uavStatus != null && baseProduct.getModel() != null) {
                     uavStatus.setText(baseProduct.getModel().getDisplayName());
                     uavStatus.setTextColor(Color.argb(100, 14, 247, 6));
                 } else {
@@ -217,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         setContentView(R.layout.activity_main);
-        StatusBarUtils.setNavBarVisibility(getWindow(),this, false);
+        StatusBarUtils.setNavBarVisibility(getWindow(), this, false);
         isAppStarted = true;
         showProgressLl = findViewById(R.id.show_progress_ll);
         uavStatus = findViewById(R.id.uav_status);
@@ -355,43 +355,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             nextActivityClass = CustomizedWidgetsActivity.class;
             Intent intent = new Intent(this, nextActivityClass);
             startActivity(intent);
-        } else {
-            //nextActivityClass = MapWidgetActivity.class;
-            PopupMenu popup = new PopupMenu(this, view);
-            popup.setOnMenuItemClickListener(this);
-            Menu popupMenu = popup.getMenu();
-            MenuInflater inflater = popup.getMenuInflater();
-            inflater.inflate(R.menu.map_select_menu, popupMenu);
-            popupMenu.findItem(R.id.here_map).setEnabled(isHereMapsSupported());
-            popupMenu.findItem(R.id.google_map).setEnabled(isGoogleMapsSupported(this));
-            popup.show();
-            return;
         }
-
     }
 
-    @Override
-    public boolean onMenuItemClick(MenuItem menuItem) {
-        Intent intent = new Intent(this, MapWidgetActivity.class);
-        int mapBrand = 0;
-        switch (menuItem.getItemId()) {
-            case R.id.here_map:
-                mapBrand = 0;
-                break;
-            case R.id.google_map:
-                mapBrand = 1;
-                break;
-            case R.id.amap:
-                mapBrand = 2;
-                break;
-            case R.id.mapbox:
-                mapBrand = 3;
-                break;
-        }
-        intent.putExtra(MapWidgetActivity.MAP_PROVIDER, mapBrand);
-        startActivity(intent);
-        return false;
-    }
 
     public static boolean isHereMapsSupported() {
         String abi;

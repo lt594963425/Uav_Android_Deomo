@@ -7,6 +7,8 @@ import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Looper;
 
+import androidx.multidex.MultiDex;
+
 import com.secneo.sdk.Helper;
 
 import dji.sdk.base.BaseProduct;
@@ -20,6 +22,7 @@ public class MApplication extends Application {
     public static BaseProduct mProduct = null;
     public static Handler mFpvHandler;
     private static MApplication app = null;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -33,9 +36,11 @@ public class MApplication extends Application {
     public static MApplication getInstance() {
         return MApplication.app;
     }
+
     @Override
     protected void attachBaseContext(Context paramContext) {
         super.attachBaseContext(paramContext);
+        MultiDex.install(this);
         Helper.install(MApplication.this);
         app = this;
     }
@@ -46,9 +51,11 @@ public class MApplication extends Application {
         }
         return (Aircraft) getProductInstance();
     }
+
     public static boolean isAircraftConnected() {
         return getProductInstance() != null && getProductInstance() instanceof Aircraft;
     }
+
     /**
      * This function is used to get the instance of DJIBaseProduct.
      * If no product is connected, it returns null.

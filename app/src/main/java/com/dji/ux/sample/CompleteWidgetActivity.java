@@ -1,7 +1,5 @@
 package com.dji.ux.sample;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -9,9 +7,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.Transformation;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
@@ -69,13 +64,10 @@ import dji.sdk.flightcontroller.Compass;
 import dji.sdk.flightcontroller.FlightController;
 import dji.sdk.flightcontroller.RTK;
 import dji.sdk.products.Aircraft;
-import dji.sdk.sdkmanager.DJISDKManager;
 import dji.ux.widget.FPVWidget;
 import dji.ux.widget.controls.CameraControlsWidget;
 
-/**
- * Activity that shows all the UI elements together
- */
+
 public class CompleteWidgetActivity extends AppCompatActivity implements AMap.OnMapClickListener, LocationSource, AMap.OnCameraChangeListener, AMap.OnMarkerClickListener, GeocodeSearch.OnGeocodeSearchListener, AMapLocationListener {
     /**
      * 地图设置
@@ -145,7 +137,6 @@ public class CompleteWidgetActivity extends AppCompatActivity implements AMap.On
                 MapMeaureUtil.getInstance().clearMarker();
             }
         });
-        ;
         findViewById(R.id.revoke_point_iv).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -295,7 +286,7 @@ public class CompleteWidgetActivity extends AppCompatActivity implements AMap.On
         aMap.setOnMarkerClickListener(this);
 
         aMap.setMyLocationType(AMap.MAP_TYPE_NORMAL);
-
+        aMap.moveCamera(CameraUpdateFactory.changeLatLng(deflatLng));
     }
 
 
@@ -392,6 +383,7 @@ public class CompleteWidgetActivity extends AppCompatActivity implements AMap.On
 
     // 飞行器主体
     protected FlightControllerState flightControllerState;
+    private LatLng deflatLng = new LatLng(28.194365, 112.973396);
     public float droneHeight;// 飞机相对高度
     public float mAltitude;//海拔高度
     public double mHomeLatitude;// 飞机返航点纬度
@@ -469,7 +461,7 @@ public class CompleteWidgetActivity extends AppCompatActivity implements AMap.On
                 @Override
                 public void run() {
 
-                    latlngTv.setText("经纬度：" + String.format("%.15f",drone_log)+ "," +String.format("%.15f",drone_lat));
+                    latlngTv.setText("经纬度：" + String.format("%.15f", drone_log) + "," + String.format("%.15f", drone_lat));
                 }
             });
         } catch (Exception e) {
@@ -581,7 +573,7 @@ public class CompleteWidgetActivity extends AppCompatActivity implements AMap.On
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    latlngTv.setText("经纬度：" + String.format("%.15f",drone_log)+ "," +String.format("%.15f",drone_lat));
+                    latlngTv.setText("经纬度：" + String.format("%.15f", drone_log) + "," + String.format("%.15f", drone_lat));
                 }
             });
         } catch (Exception e) {

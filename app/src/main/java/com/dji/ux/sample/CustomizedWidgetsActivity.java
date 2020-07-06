@@ -23,13 +23,12 @@ public class CustomizedWidgetsActivity extends AppCompatActivity implements View
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customized_widgets);
         initView();
-
     }
 
     private void initView() {
-        fpvWidget = (FPVWidget)findViewById(R.id.fpv_custom_widget);
+        fpvWidget = (FPVWidget) findViewById(R.id.fpv_custom_widget);
         fpvOverlayWidget = (FPVOverlayWidget) findViewById(R.id.fpv_overlay_widget);
-        secondaryFpvWidget = (FPVWidget)findViewById(R.id.secondary_fpv_custom_widget);
+        secondaryFpvWidget = (FPVWidget) findViewById(R.id.secondary_fpv_custom_widget);
         ((CheckBox) findViewById(R.id.checkbox_primary_camera_name)).setOnCheckedChangeListener(this);
         ((CheckBox) findViewById(R.id.checkbox_secondary_camera_name)).setOnCheckedChangeListener(this);
         ((CheckBox) findViewById(R.id.checkbox_primary_camera_side)).setOnCheckedChangeListener(this);
@@ -57,8 +56,8 @@ public class CustomizedWidgetsActivity extends AppCompatActivity implements View
             params.height = 2 * fpvWidget.getHeight();
             params.width = 2 * fpvWidget.getWidth();
         } else {
-            params.height = fpvWidget.getHeight()/2;
-            params.width = fpvWidget.getWidth()/2;
+            params.height = fpvWidget.getHeight() / 2;
+            params.width = fpvWidget.getWidth() / 2;
         }
         isOriginalSize = !isOriginalSize;
         fpvWidget.setLayoutParams(params);

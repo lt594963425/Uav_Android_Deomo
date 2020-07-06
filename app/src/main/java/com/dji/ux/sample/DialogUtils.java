@@ -3,15 +3,12 @@ package com.dji.ux.sample;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
 import com.dji.ux.sample.base.BaseDialog;
 
-import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by ${LiuTao}.

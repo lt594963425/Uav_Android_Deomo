@@ -218,7 +218,7 @@
             android:id="@+id/app_ui_back"
             android:layout_width="50dp"
             android:layout_height="match_parent"
-            android:background="@color/medium_blue"
+            android:background="@color/transparent_80"
             android:gravity="center"
             android:text="测绘"
             android:textColor="@color/white" />

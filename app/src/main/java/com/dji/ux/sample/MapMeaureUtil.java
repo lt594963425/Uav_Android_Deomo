@@ -1,26 +1,23 @@
 package com.dji.ux.sample;
-
-
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.maps.model.Polygon;
+import com.amap.api.maps.model.PolygonOptions;
 import com.amap.api.maps.model.Polyline;
 import com.amap.api.maps.model.PolylineOptions;
 import com.amap.api.maps.model.Text;
 import com.amap.api.maps.model.TextOptions;
-import com.amap.api.services.core.LatLonPoint;
-
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
 /**
  * Created by ${LiuTao}.
  * KmlDataBean: Administrator
@@ -48,9 +45,16 @@ public class MapMeaureUtil {
     private int backColor = Color.argb(187, 255, 255, 255);
     //标定点数
     private int marker_size = 0;
+    private int lasIndexId = 0;
+    //保存hangdianjilu
+    private List<Integer> mIndexList = new ArrayList<>();
+    private List<LatLng> mBoundsEWSNLatLng;
     private String mianji;
     //    private String changdu;
     private String zhouchang;
+    //多边形
+    public Polygon mPolygon = null;
+    public List<LatLng> polygons = new ArrayList<LatLng>();
 
     /**
      * 获取单例
@@ -78,6 +82,7 @@ public class MapMeaureUtil {
 
     //添加点
     public void addMarker(LatLng latLng) {
+//        addProductORCMapView(latLng);
         calculationArea(latLng);
     }
 
@@ -327,10 +332,7 @@ public class MapMeaureUtil {
             float distance = (float) (Math.round(AMapUtils.calculateLineDistance(latLng1, latLng2) * 10)) / 10;
             LatLng mediaLatlng = getMidLatLng(latLng1, latLng2);
             if (!mDistanceText.contains(mediaLatlng)) {
-                mDistanceText.add(aMap.addText(
-                        new TextOptions().position(mediaLatlng).fontColor(fenColor)
-                                .backgroundColor(backColor).text(distance + "米")
-                ));
+                mDistanceText.add(aMap.addText(new TextOptions().position(mediaLatlng).fontColor(fenColor).backgroundColor(backColor).text(distance + "米")));
             }
         }
     }
@@ -436,4 +438,109 @@ public class MapMeaureUtil {
         }
     }
 
+    /**
+     * 区域点
+     *
+     * @param latLng 点
+     */
+    public void addProductORCMapView(LatLng latLng) {
+        if (mPolygon != null) {
+            if (mPolygon.contains(latLng)) {
+                //在区域内
+                List<Double> list = new ArrayList<>();
+                for (int i = 0; i < polygons.size(); i++) {
+                    LatLng latLng1;
+                    LatLng latLng2;
+                    if (i == polygons.size() - 1) {
+                        latLng1 = polygons.get(i);
+                        latLng2 = polygons.get(0);
+                    } else {
+                        latLng1 = polygons.get(i);
+                        latLng2 = polygons.get(i + 1);
+                    }
+                    list.add(RouteUtils2.PointToSegDist(latLng.longitude, latLng.latitude, latLng1.longitude, latLng1.latitude, latLng2.longitude, latLng2.latitude));
+                }
+                double x = Collections.min(list);
+                int index = list.indexOf(x);
+                polygons.add(index + 1, latLng);
+                lasIndexId = index + 1;
+                mIndexList.add(lasIndexId);
+            } else {
+                LatLng centerLatlng = mBoundsEWSNLatLng.get(0);
+                for (int i = 0; i < polygons.size(); i++) {
+                    LatLng latLng1;
+                    LatLng latLng2;
+                    if (i == polygons.size() - 1) {
+                        latLng1 = polygons.get(i);
+                        latLng2 = polygons.get(0);
+                        if (RouteUtils2.doIntersect(RouteUtils2.latlng2px(aMap, centerLatlng), RouteUtils2.latlng2px(aMap, latLng), RouteUtils2.latlng2px(aMap, latLng1), RouteUtils2.latlng2px(aMap, latLng2))) {
+                            lasIndexId = i + 1;
+                            mIndexList.add(lasIndexId);
+                            polygons.add(i + 1, latLng);
+                            break;
+                        } else {
+                            LatLng latLng3 = null;
+                            LatLng latLng4 = null;
+                            List<LatLng> latLngs = new ArrayList<>();
+                            for (int j = 0; j < polygons.size(); j++) {
+                                if (j == polygons.size() - 1) {
+                                    latLng3 = polygons.get(j);
+                                    latLng4 = polygons.get(0);
+                                } else {
+                                    latLng3 = polygons.get(j);
+                                    latLng4 = polygons.get(j + 1);
+                                }
+                                latLngs.add(RouteUtils2.getMidLatLng(latLng3, latLng4));
+                            }
+                            List<Float> integerList = new ArrayList<>();
+                            for (int j = 0; j < latLngs.size(); j++) {
+                                integerList.add(AMapUtils.calculateLineDistance(latLngs.get(j), centerLatlng));
+                            }
+                            float maxd = Collections.min(integerList);
+                            int j = integerList.indexOf(maxd);
+                            lasIndexId = j + 1;
+                            mIndexList.add(lasIndexId);
+                            polygons.add(j + 1, latLng);
+
+                        }
+                    } else {
+                        latLng1 = polygons.get(i);
+                        latLng2 = polygons.get(i + 1);
+                        boolean iscross = RouteUtils2.doIntersect(RouteUtils2.latlng2px(aMap, centerLatlng), RouteUtils2.latlng2px(aMap, latLng), RouteUtils2.latlng2px(aMap, latLng1), RouteUtils2.latlng2px(aMap, latLng2));
+                        if (iscross) {
+                            polygons.add(lasIndexId, latLng);
+                            lasIndexId = i + 1;
+                            mIndexList.add(lasIndexId);
+                            break;
+                        }
+                    }
+
+                }
+            }
+        } else {
+            polygons.add(latLng);
+            lasIndexId = polygons.size() - 1;
+            mIndexList.add(lasIndexId);
+        }
+        mBoundsEWSNLatLng = RouteUtils2.createPolygonBounds(polygons);
+        if (mPolygon != null) {
+            mPolygon.remove();
+        }
+        mPolygon = drawPolygonOptions(polygons);
+    }
+
+    /**
+     * 边框
+     *
+     * @param linelatLngs
+     * @return
+     */
+    private Polygon drawPolygonOptions(List<LatLng> linelatLngs) {
+        PolygonOptions polygonOptions = new PolygonOptions();
+        polygonOptions.addAll(linelatLngs);
+        polygonOptions.strokeWidth(1) // 多边形的边框
+                .strokeColor(Color.argb(0, 0, 0, 0)) // 边框颜色
+                .fillColor(Color.argb(0, 0, 0, 0));   // 多边形的填充色
+        return aMap.addPolygon(polygonOptions);
+    }
 }
