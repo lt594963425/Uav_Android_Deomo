@@ -2,6 +2,8 @@ package com.dji.ux.sample;
 
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.SystemClock;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -60,14 +62,18 @@ import dji.common.flightcontroller.RTKState;
 import dji.common.util.CommonCallbacks;
 import dji.keysdk.CameraKey;
 import dji.keysdk.KeyManager;
+import dji.sdk.codec.DJICodecManager;
 import dji.sdk.flightcontroller.Compass;
 import dji.sdk.flightcontroller.FlightController;
 import dji.sdk.flightcontroller.RTK;
 import dji.sdk.products.Aircraft;
+import dji.sdk.sdkmanager.DJISDKManager;
 import dji.ux.widget.FPVWidget;
 import dji.ux.widget.controls.CameraControlsWidget;
 
-
+/**
+ * 无人机飞控
+ */
 public class CompleteWidgetActivity extends AppCompatActivity implements AMap.OnMapClickListener, LocationSource, AMap.OnCameraChangeListener, AMap.OnMarkerClickListener, GeocodeSearch.OnGeocodeSearchListener, AMapLocationListener {
     /**
      * 地图设置
@@ -108,6 +114,7 @@ public class CompleteWidgetActivity extends AppCompatActivity implements AMap.On
     private LinearLayout controlBottomLayout;
     private Switch measureSc;
     private CheckBox uav_map_lock_cb;
+    private ImageView ivGetBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +124,7 @@ public class CompleteWidgetActivity extends AppCompatActivity implements AMap.On
         StatusBarUtils.setNavBarVisibility(getWindow(), this, false);
         initWindowParas();
         EventBus.getDefault().register(this);
+        ivGetBitmap = findViewById(R.id.iv_getBitmap);
         measureSc = findViewById(R.id.measure_sc);
         controlBottomLayout = findViewById(R.id.control_bottom_layout);
         openLittltUAVLationLock = SPManager.getBoolean(SPManager.SP_MAIN_FLAG, Constanst.UAVMAPLOCK, false);
@@ -141,6 +149,14 @@ public class CompleteWidgetActivity extends AppCompatActivity implements AMap.On
             @Override
             public void onClick(View v) {
                 MapMeaureUtil.getInstance().revokeMarker();
+            }
+        });
+
+        ivGetBitmap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                FileUtils.saveToSDCard(Environment.getExternalStorageDirectory().getPath() + "/uav/" + SystemClock.currentThreadTimeMillis() + ".png", fpvWidget.getBitmap());
             }
         });
         findViewById(R.id.input_point_iv).setOnClickListener(new View.OnClickListener() {

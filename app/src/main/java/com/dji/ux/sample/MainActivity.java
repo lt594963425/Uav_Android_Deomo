@@ -36,6 +36,7 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
+
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
@@ -63,56 +64,60 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static boolean isAppStarted = false;
     private static boolean isAppLogin = false;
     private static boolean isAppRegist = false;
+    private DJISDKManager.SDKManagerCallback registrationCallback =
+            new DJISDKManager.SDKManagerCallback() {
+                @Override
+                public void onRegister(DJIError error) {
+                    isRegistrationInProgress.set(false);
+                    if (error == DJISDKError.REGISTRATION_SUCCESS) {
+                        isAppRegist = true;
+                        loginAccount();
+                        DJISDKManager.getInstance().startConnectionToProduct();
+                    } else {
+                        isAppRegist = false;
+                        hindProgress();
+                        Toast.makeText(getApplicationContext(), "sdk注册失败, 请检查网络并重试!", Toast.LENGTH_LONG).show();
+                    }
+                }
 
-    private DJISDKManager.SDKManagerCallback registrationCallback = new DJISDKManager.SDKManagerCallback() {
-        @Override
-        public void onRegister(DJIError error) {
-            isRegistrationInProgress.set(false);
-            if (error == DJISDKError.REGISTRATION_SUCCESS) {
-                isAppRegist = true;
-                loginAccount();
-                DJISDKManager.getInstance().startConnectionToProduct();
-            } else {
-                isAppRegist = false;
-                hindProgress();
-                Toast.makeText(getApplicationContext(), "sdk注册失败, 请检查网络并重试!", Toast.LENGTH_LONG).show();
-            }
-        }
+                @Override
+                public void onProductDisconnect() {
+                    baseProduct = null;
+                    Toast.makeText(getApplicationContext(), "无人机连接失败!", Toast.LENGTH_LONG).show();
+                    notifyStatusChange();
+                }
 
-        @Override
-        public void onProductDisconnect() {
-            baseProduct = null;
-            Toast.makeText(getApplicationContext(), "无人机连接失败!", Toast.LENGTH_LONG).show();
-            notifyStatusChange();
-        }
+                @Override
+                public void onProductConnect(BaseProduct product) {
+                    baseProduct = product;
+                    notifyStatusChange();
+                }
 
-        @Override
-        public void onProductConnect(BaseProduct product) {
-            baseProduct = product;
-//            Toast.makeText(getApplicationContext(), "无人机连接成功!", Toast.LENGTH_LONG).show();
-            notifyStatusChange();
-        }
+                @Override
+                public void onProductChanged(BaseProduct product) {
+                    baseProduct = product;
+                    notifyStatusChange();
+                }
 
-        @Override
-        public void onComponentChange(BaseProduct.ComponentKey key,
-                                      BaseComponent oldComponent,
-                                      BaseComponent newComponent) {
-//            Toast.makeText(getApplicationContext(), key.toString() + " changed", Toast.LENGTH_LONG).show();
-            if (newComponent != null) {
-                newComponent.setComponentListener(mDJIComponentListener);
-            }
-        }
+                @Override
+                public void onComponentChange(BaseProduct.ComponentKey key,
+                                              BaseComponent oldComponent,
+                                              BaseComponent newComponent) {
+                    if (newComponent != null) {
+                        newComponent.setComponentListener(mDJIComponentListener);
+                    }
+                }
 
-        @Override
-        public void onInitProcess(DJISDKInitEvent event, int totalProcess) {
+                @Override
+                public void onInitProcess(DJISDKInitEvent event, int totalProcess) {
 
-        }
+                }
 
-        @Override
-        public void onDatabaseDownloadProgress(long current, long total) {
+                @Override
+                public void onDatabaseDownloadProgress(long current, long total) {
 
-        }
-    };
+                }
+            };
     private BaseComponent.ComponentListener mDJIComponentListener = new BaseComponent.ComponentListener() {
 
         @Override
@@ -129,10 +134,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void run() {
                 if (baseProduct != null && uavStatus != null && baseProduct.getModel() != null) {
                     uavStatus.setText(baseProduct.getModel().getDisplayName());
-                    uavStatus.setTextColor(Color.argb(100, 10, 217, 217));
+                    uavStatus.setTextColor(Color.rgb(10, 217, 217));
+
                 } else {
                     uavStatus.setText("设备未连接");
-                    uavStatus.setTextColor(Color.argb(100, 247, 54, 54));
+                    uavStatus.setTextColor(Color.rgb(247, 54, 54));
                 }
             }
         });
@@ -174,8 +180,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onFailure(DJIError djiError) {
                         Log.e("登录", "-----" + djiError.getDescription() + "-----");
-
-
                     }
                 });
     }
@@ -269,6 +273,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
         checkAndRequestPermissions();
+
+
     }
 
     @Override

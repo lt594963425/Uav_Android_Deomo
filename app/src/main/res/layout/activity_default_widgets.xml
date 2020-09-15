@@ -318,6 +318,13 @@
         android:layout_marginEnd="170dp"
         android:layout_marginBottom="60dp"
         android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/iv_getBitmap"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_half_transparent_ovl"
+            android:padding="8dp"
+            android:src="@drawable/camera_controll_takephoto_icon_hdr" />
 
         <ImageView
             android:id="@+id/clean_point_iv"
