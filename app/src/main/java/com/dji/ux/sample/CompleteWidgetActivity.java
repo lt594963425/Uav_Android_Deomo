@@ -9,12 +9,14 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +46,7 @@ import com.amap.api.maps.model.PolylineOptions;
 import com.amap.api.services.geocoder.GeocodeResult;
 import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeResult;
+import com.dji.ux.sample.adapter.YearArrayAdapter;
 import com.dji.ux.sample.base.BaseDialog;
 import com.dji.ux.sample.base.Constanst;
 import com.dji.ux.sample.base.SPManager;
@@ -70,6 +73,8 @@ import dji.sdk.products.Aircraft;
 import dji.sdk.sdkmanager.DJISDKManager;
 import dji.ux.widget.FPVWidget;
 import dji.ux.widget.controls.CameraControlsWidget;
+
+import static com.dji.ux.sample.UIUtils.getContext;
 
 /**
  * 无人机飞控
@@ -115,6 +120,8 @@ public class CompleteWidgetActivity extends AppCompatActivity implements AMap.On
     private Switch measureSc;
     private CheckBox uav_map_lock_cb;
     private ImageView ivGetBitmap;
+    private Spinner cameraSpinner;
+    private YearArrayAdapter arrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +131,8 @@ public class CompleteWidgetActivity extends AppCompatActivity implements AMap.On
         StatusBarUtils.setNavBarVisibility(getWindow(), this, false);
         initWindowParas();
         EventBus.getDefault().register(this);
+        cameraSpinner = findViewById(R.id.camera_spinner);
+
         ivGetBitmap = findViewById(R.id.iv_getBitmap);
         measureSc = findViewById(R.id.measure_sc);
         controlBottomLayout = findViewById(R.id.control_bottom_layout);
@@ -245,6 +254,30 @@ public class CompleteWidgetActivity extends AppCompatActivity implements AMap.On
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 isSelectedType = isChecked;
                 SPManager.saveBoolean(SPManager.SP_MAIN_FLAG, Constanst.UAVMAPDATA, isSelectedType);
+            }
+        });
+        initSpanner();
+    }
+
+    private List<String> mItems;
+
+    private void initSpanner() {
+        mItems = new ArrayList<>();
+        mItems.add("相机1");
+        mItems.add("相机2");
+        arrayAdapter = new YearArrayAdapter(getContext(), mItems);
+        arrayAdapter.setDropDownViewResource(R.layout.base_spinner_dropdown_item);
+        cameraSpinner.setAdapter(arrayAdapter);
+        cameraSpinner.setSelection(mItems.indexOf(0));
+        cameraSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
     }

@@ -18,8 +18,7 @@
             android:id="@+id/fpv_widget"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            custom:sourceCameraNameVisibility="false"
-        />
+            custom:sourceCameraNameVisibility="false" />
 
     </RelativeLayout>
 
@@ -318,6 +317,7 @@
         android:layout_marginEnd="170dp"
         android:layout_marginBottom="60dp"
         android:orientation="horizontal">
+
         <ImageView
             android:id="@+id/iv_getBitmap"
             android:layout_width="40dp"
@@ -386,10 +386,12 @@
             android:text="无人机"
             android:textColor="@color/white"
             android:textSize="12sp" />
+
         <Switch
             android:id="@+id/measure_sc"
             android:layout_width="60dp"
-            android:layout_height="35dp"/>
+            android:layout_height="35dp" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="30dp"
@@ -421,6 +423,21 @@
             android:layout_marginBottom="5dp" />
     </LinearLayout>
 
+    <Spinner
+        android:id="@+id/camera_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_above="@+id/dashboard_widget"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="90dp"
+        android:layout_toRightOf="@+id/TakeOffReturnPanel"
+        android:layout_weight="5"
+        android:dropDownWidth="match_parent"
+        android:gravity="center_vertical"
+        android:overlapAnchor="false"
+        android:spinnerMode="dropdown"
+        android:textColor="#ffffff"
+        android:visibility="visible" />
     <!-- Panels -->
     <dji.ux.widget.HistogramWidget
         android:layout_width="150dp"
