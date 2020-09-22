@@ -72,6 +72,7 @@ import dji.sdk.flightcontroller.RTK;
 import dji.sdk.products.Aircraft;
 import dji.sdk.sdkmanager.DJISDKManager;
 import dji.ux.widget.FPVWidget;
+import dji.ux.widget.TakeOffWidget;
 import dji.ux.widget.controls.CameraControlsWidget;
 
 import static com.dji.ux.sample.UIUtils.getContext;

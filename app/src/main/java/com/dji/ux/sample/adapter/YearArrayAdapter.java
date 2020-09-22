@@ -60,7 +60,6 @@ public class YearArrayAdapter extends ArrayAdapter<String> {
             LayoutInflater inflater = LayoutInflater.from(mContext);
             convertView = inflater.inflate(android.R.layout.simple_spinner_item, parent, false);
         }
-
         //此处text1是Spinner默认的用来显示文字的TextView
         TextView tv = (TextView) convertView.findViewById(android.R.id.text1);
         tv.setText(mStringArray.get(position) );
