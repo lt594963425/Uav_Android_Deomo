@@ -133,7 +133,6 @@ public class CompleteWidgetActivity extends AppCompatActivity implements AMap.On
         initWindowParas();
         EventBus.getDefault().register(this);
         cameraSpinner = findViewById(R.id.camera_spinner);
-
         ivGetBitmap = findViewById(R.id.iv_getBitmap);
         measureSc = findViewById(R.id.measure_sc);
         controlBottomLayout = findViewById(R.id.control_bottom_layout);
@@ -599,6 +598,7 @@ public class CompleteWidgetActivity extends AppCompatActivity implements AMap.On
                 isUpdateBackPoint = true;
                 setHomeImage(mHomeLatitude, mHomeLongitude);
             }
+
             if (checkGpsCoordinate(drone_lat, drone_log)) {
                 //画出飞机的marker
                 showAircraftImage();
@@ -760,10 +760,10 @@ public class CompleteWidgetActivity extends AppCompatActivity implements AMap.On
     }
 
     private void onViewClick(View view) {
-        if (isFastDoubleClick()) {
-            Toast.makeText(this, "切换过快", Toast.LENGTH_SHORT).show();
-            return;
-        }
+//        if (isFastDoubleClick()) {
+//            Toast.makeText(this, "切换过快", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
         if (view == fpvWidget && !FPVISBIG) {
             resizeFPVWidget(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT, 0, 0);
             resizeMapWidget(mapWidget, width, height, margin);

@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static boolean isAppStarted = false;
     private static boolean isAppLogin = false;
     private static boolean isAppRegist = false;
+
     private DJISDKManager.SDKManagerCallback registrationCallback =
             new DJISDKManager.SDKManagerCallback() {
                 @Override
